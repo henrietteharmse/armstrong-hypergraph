@@ -1,0 +1,91 @@
+\documentclass[a4paper,10pt,final,onecolumn]{llncs}
+\usepackage{amsmath}
+\usepackage{latexsym} 
+\usepackage{amssymb}
+\usepackage{verbatim}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{stmaryrd}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[mathscr]{euscript}
+\usepackage[toc,page]{appendix}
+\usepackage{tikz}
+\usepackage{cite}
+\usepackage{hyperref}
+
+\SetSymbolFont{stmry}{bold}{U}{stmry}{m}{n}
+
+\pagestyle{plain}
+%\thispagestyle{empty}
+\hyphenation{roddick}
+
+\newcounter{parcount}
+% \newcommand\myparcount{\par\textbf{\refstepcounter{parcount}\theparcount.}\space} % switch paragraph numbering ON
+\newcommand\myparcount{} % switch paragraph numbering OFF
+
+\newcommand\armstrong[1][]{%
+\tikzset{
+    shield width/.store in=\shieldwidth,
+    shield width=0.8ex,
+    shield height/.store in=\shieldheight,
+    shield height=1ex
+}%
+\tikz [baseline,#1] \draw (0,\shieldheight) -- (0,\shieldwidth/2) arc [radius=\shieldwidth/2, start angle=-180, end angle=0] -- (\shieldwidth,\shieldheight) -- cycle;%
+}
+
+\newcommand{\defined}{\mathrel{\mathop:}=}
+
+\newcommand\setspacing{\hspace{2pt}}
+\newcommand\axiomspacing{\hspace{1pt}}
+\newcommand\linespacing{-3pt}
+
+\title{\texttt{armstrong-hypergraph} Design Decisions}
+\author{Henriette Harmse\institute{\href{https://henrietteharmse.com}{HenrietteHarmse.com}}}
+
+\begin{document}
+    
+  \maketitle
+  \begin{abstract}
+This document details the design decisions made in implementing the \texttt{armstrong-hypergraph} library for use in computing Armstrong relations/ABoxes for schemas/TBoxes with functional dependencies.
+  \end{abstract}
+  
+  \section{Purpose} \label{sec_Introduction}
+  The intended purpose of \texttt{armstrong-hypergraph} is to be usable by the implementation of the Armstrong ABox plugin for Prot\'{e}g\'{e}. The specific functionality required is to calculate the minimal transversals (minimal hitting sets) of a hypergraph.
+  
+  \section{Tool Decisions}
+  \subsection{Java}
+  Java has been chosen as the implementation language of \texttt{armstrong-hypergraph} due to Prot\'{e}g\'{e} 5.2 and related libraries like the OWL API being written in Java. Version~8 of Java will be used since both Prot\'{e}g\'{e} and the \\
+  \texttt{owlapi-distribution-4.2.8.jar} (used in Prot\'{e}g\'{e}) supports Java 8.
+  
+  
+  \subsection{Graph/Hypergraph Tool Considerations}
+  Frankly I would prefer to use an existing library rather than write it myself. An existing well-used library is likely to be more robust than anything I may write merely because they have resolved design issues I still need to discover. However, even though there are a number of Java libraries that implement graph algorithms, these are all limited to graphs having edges consisting of two vertices at most. 
+ 
+  The following libraries/tools were considered for implementing hypergraphs:
+  \begin{description}
+   \item[\href{https://github.com/jrtom/jung}{JUNG}] The underlying graph implementation is based on that of the Google Guava library, which does not support hypergraphs.
+   \item[\href{http://hypergraph.sourceforge.net/}{Hypergraph}] This applet seems to be focussed at visualization of hypergraphs rather than providing an API.
+   \item[\href{http://jgrapht.org/}{JGraphT}] Does not support hypergraphs.
+   \item[\href{https://github.com/google/guava}{Guava}] Does not support hypergraphs.
+  \end{description}
+  
+  It is possible that Guava or JUNG in future may support hypergraphs, in which case it may be sensible to discontiunue this library in favour of mainstream libraries.
+  
+  \section{Implemetation Details}
+  \subsection{Minimal Hypergraph Transversal/Minimal Hitting Set}
+  In this document we will refer to minimal hitting sets (MHS).
+  For an initial implementation of MHS the algorithm of Berge has been used~\cite{Berge1989,Hagen2009,Gainer-Dewar2016}. 
+  
+  \section{To Do}
+  \begin{enumerate}
+   \item Based on the findings of Gainer-Dewar et al.~\cite{Gainer-Dewar2016} the MMCS algorithm may provide beter performance than the Berge algorithm.
+   \item Currently \texttt{armstrong-hypergraph} is hard-coded to use \texttt{java.util.HashSet} as a set implementation. With Java 8 it possible to refactor the code such that the set implementation is generic and to instantiate the generic set without using reflection. See \href{https://stackoverflow.com/questions/75175/create-instance-of-generic-type-in-java}{Generic instantiation trick in Java 8}.
+  \end{enumerate}
+
+    
+      \bibliographystyle{amsplain}  
+      \bibliography{./BibliographicDetails_v.0.1}
+
+\end{document}
