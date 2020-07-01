@@ -1,25 +1,17 @@
 package org.armstrong.hypergraph;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.armstrong.hypergraph.HypergraphOperations;
-import org.armstrong.hypergraph.HypergraphOperationsImpl;
-import org.armstrong.hypergraph.mhs.BergeMHS;
-import org.armstrong.hypergraph.mhs.MHS;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
-@RunWith(Parameterized.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class TestHypergraphWedge {
   private static Logger logger = LoggerFactory.getLogger(TestHypergraphWedge.class);
   // Why This Failure marker
@@ -29,12 +21,12 @@ public class TestHypergraphWedge {
   private Set<Set<String>> inputEdges2;
   private Set<Set<String>> expectedOutput;
   
-  @Parameters
-  public static Collection<Object[]> data() {
-      return Arrays.asList(new Object[][] { 
-          testDataSet1(),
-         });
-  }
+//  @Parameters
+//  public static Collection<Object[]> data() {
+//      return Arrays.asList(new Object[][] {
+//          testDataSet1(),
+//         });
+//  }
  
   public TestHypergraphWedge(Set<Set<String>> inputEdges1, Set<Set<String>> inputEdges2, Set<Set<String>> expectedOutput) {
     super();
@@ -42,8 +34,9 @@ public class TestHypergraphWedge {
     this.inputEdges2 = inputEdges2;
     this.expectedOutput = expectedOutput;
   }
-  
-  @Test
+
+  @ParameterizedTest
+  @MethodSource({"testDataSet1x"})
   public void testHypergraphWedge() {
     Set<Set<String>> actualOutput = null;
     try {
@@ -53,7 +46,7 @@ public class TestHypergraphWedge {
     }  catch (Throwable t) {
       logger.error(WTF_MARKER, t.getMessage(), t);
     }
-    Assert.assertEquals(expectedOutput, actualOutput);
+    assertEquals(expectedOutput, actualOutput);
   }  
   
   private static Object[] testDataSet1() {

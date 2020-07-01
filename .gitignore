@@ -39,9 +39,11 @@ catalog-*.xml
 /.settings/
 /.metadata/
 /target/
+/.idea/
 .project
 .classpath
 *.~ml
+*.iml
 
 # explicit files to exclude
 Ideas.txt

@@ -7,16 +7,15 @@ import java.util.Set;
 
 import org.armstrong.hypergraph.Hypergraph;
 import org.armstrong.hypergraph.HypergraphImpl;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-@RunWith(Parameterized.class)
 public class TestBergeMHS {
   private static Logger logger = LoggerFactory.getLogger(TestBergeMHS.class);
   // Why This Failure marker
@@ -25,16 +24,16 @@ public class TestBergeMHS {
   private Hypergraph<String> input;
   private Set<Set<String>> expectedOutput;
 
-  @Parameters
-  public static Collection<Object[]> data() {
-    return Arrays.asList(new Object[][] {
-//      testDataSet1(),
-//      testDataSet2(),
-//      testDataSet3(),
-//        testDataSet4(),
-      testDataSet5()
-    });
-  }
+//  @Parameters
+//  public static Collection<Object[]> data() {
+//    return Arrays.asList(new Object[][] {
+////      testDataSet1(),
+////      testDataSet2(),
+////      testDataSet3(),
+////        testDataSet4(),
+//      testDataSet5()
+//    });
+//  }
   
   public TestBergeMHS(Hypergraph<String> input, Set<Set<String>> expectedOutput) {
     super();
@@ -42,7 +41,8 @@ public class TestBergeMHS {
     this.expectedOutput = expectedOutput;
   }
 
-  @Test
+  @ParameterizedTest
+  @MethodSource({"testDataSet1", "testDataSet2", "testDataSet3", "testDataSet4", "testDataSet5"})
   public void testBergeMHS() {
     Set<Set<String>> actualOutput = null;
     try {
